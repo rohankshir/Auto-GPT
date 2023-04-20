@@ -5,6 +5,8 @@ import re
 import time
 from logging import LogRecord
 from colorama import Fore
+import sys
+from logging.handlers import TimedRotatingFileHandler
 
 from colorama import Style
 
@@ -19,6 +21,32 @@ Logger that handle titles in different colors.
 Outputs logs in console, activity.log, and errors.log
 For console handler: simulates typing
 '''
+
+
+def setup_logger(log_level=logging.DEBUG):
+    log_format = (
+        "%(asctime)s - [%(levelname)s] - %(name)s - (%(filename)s:%(lineno)d) - %(message)s"
+    )
+
+    # Set up the console handler to display logs in the console
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(logging.Formatter(log_format))
+
+    # Set up the file handler to store logs in a file
+    if not os.path.exists("logs"):
+        os.makedirs("logs")
+    file_handler = TimedRotatingFileHandler("logs/app.log", when="midnight")
+    file_handler.setFormatter(logging.Formatter(log_format))
+    file_handler.setLevel(log_level)
+
+    # Configure the root logger
+    logging.basicConfig(
+        level=logging.INFO,
+        format=log_format,
+        handlers=[
+            console_handler,
+        ],
+    )
 
 
 class Logger(metaclass=Singleton):
@@ -189,4 +217,4 @@ def remove_color_codes(s: str) -> str:
     return ansi_escape.sub('', s)
 
 
-logger = Logger()
+typewriter_logger = Logger()

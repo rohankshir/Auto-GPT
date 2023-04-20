@@ -1,4 +1,5 @@
 import browse
+import logging
 import json
 from memory import get_memory
 import datetime
@@ -7,12 +8,15 @@ import speak
 from config import Config
 import ai_functions as ai
 from file_operations import read_file, write_to_file, append_to_file, delete_file, search_files
-from execute_code import execute_python_file, execute_shell
+from execute_code import execute_python_file, execute_shell, run_python_tests
 from json_parser import fix_and_parse_json
 from image_gen import generate_image
 from duckduckgo_search import ddg
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+logger = logging.getLogger(__name__)
+
 
 cfg = Config()
 
@@ -31,7 +35,7 @@ def get_command(response):
         response_json = fix_and_parse_json(response)
 
         if "command" not in response_json:
-            return "Error:" , "Missing 'command' object in JSON"
+            return "Error:", "Missing 'command' object in JSON"
 
         command = response_json["command"]
 
@@ -213,10 +217,10 @@ def delete_memory(key):
     if key >= 0 and key < len(mem.permanent_memory):
         _text = "Deleting memory with key " + str(key)
         del mem.permanent_memory[key]
-        print(_text)
+        logger.info(_text)
         return _text
     else:
-        print("Invalid key, cannot delete memory.")
+        logger.info("Invalid key, cannot delete memory.")
         return None
 
 
@@ -227,29 +231,30 @@ def overwrite_memory(key, string):
         key_int = int(key)
         # Check if the integer key is within the range of the permanent_memory list
         if 0 <= key_int < len(mem.permanent_memory):
-            _text = "Overwriting memory with key " + str(key) + " and string " + string
+            _text = "Overwriting memory with key " + \
+                str(key) + " and string " + string
             # Overwrite the memory slot with the given integer key and string
             mem.permanent_memory[key_int] = string
-            print(_text)
+            logger.info(_text)
             return _text
         else:
-            print(f"Invalid key '{key}', out of range.")
+            logger.info(f"Invalid key '{key}', out of range.")
             return None
     # Check if the key is a valid string
     elif isinstance(key, str):
         _text = "Overwriting memory with key " + key + " and string " + string
         # Overwrite the memory slot with the given string key and string
         mem.permanent_memory[key] = string
-        print(_text)
+        logger.info(_text)
         return _text
     else:
-        print(f"Invalid key '{key}', must be an integer or a string.")
+        logger.info(f"Invalid key '{key}', must be an integer or a string.")
         return None
 
 
 def shutdown():
     """Shut down the program"""
-    print("Shutting down...")
+    logger.info("Shutting down...")
     quit()
 
 

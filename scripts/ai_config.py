@@ -1,6 +1,9 @@
+import logging
 import yaml
 import os
 from prompt import get_prompt
+
+logger = logging.getLogger(__name__)
 
 
 class AIConfig:
@@ -91,5 +94,9 @@ class AIConfig:
         for i, goal in enumerate(self.ai_goals):
             full_prompt += f"{i+1}. {goal}\n"
 
-        full_prompt += f"\n\n{get_prompt()}"
+        full_prompt += f"\n\n{get_prompt(task_mode)}"
         return full_prompt
+
+    def __str__(self) -> str:
+        s = f"AI Name: {self.ai_name}\nAI Role: {self.ai_role}\nAI Goals: {self.ai_goals}"
+        return s

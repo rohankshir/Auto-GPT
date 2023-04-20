@@ -1,8 +1,9 @@
-from config import Config
-
-cfg = Config()
-
 from llm_utils import create_chat_completion
+from config import Config
+import logging
+
+logger = logging.getLogger(__name__)
+cfg = Config()
 
 
 # This is a magic function that can do anything with no-code. See
@@ -22,6 +23,7 @@ def call_ai_function(function, args, description, model=None):
         },
         {"role": "user", "content": args},
     ]
+    logger.debug("call ai function messages: %s", messages)
 
     response = create_chat_completion(
         model=model, messages=messages, temperature=0

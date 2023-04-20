@@ -1,10 +1,13 @@
 from typing import List
 import json
 from config import Config
+from ai_config import AIConfig
 from call_ai_function import call_ai_function
+from llm_utils import create_chat_completion
+import logging
 cfg = Config()
 
-
+logger = logging.getLogger(__name__)
 def evaluate_code(code: str) -> List[str]:
     """
     A function that takes in a string and returns a response from create chat completion api call.

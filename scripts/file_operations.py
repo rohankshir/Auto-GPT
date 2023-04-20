@@ -1,3 +1,4 @@
+import json
 import os
 import os.path
 
@@ -25,7 +26,9 @@ def read_file(filename):
     try:
         filepath = safe_join(working_directory, filename)
         with open(filepath, "r", encoding='utf-8') as f:
-            content = f.read()
+            # Read the file and escape any special characters
+            # This will allow it to be stored easily in a JSON object
+            content = json.dumps(f.read())
         return content
     except Exception as e:
         return "Error: " + str(e)

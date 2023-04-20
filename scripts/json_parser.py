@@ -1,9 +1,12 @@
 import json
+import logging
 from typing import Any, Dict, Union
 from call_ai_function import call_ai_function
 from config import Config
 from json_utils import correct_json
-from logger import logger
+
+logger = logging.getLogger(__name__)
+
 
 cfg = Config()
 
@@ -34,6 +37,8 @@ def fix_and_parse_json(
     """Fix and parse JSON string"""
     try:
         json_str = json_str.replace('\t', '')
+        if '```' in json_str:
+            json_str = json_str.split('```')[1]
         return json.loads(json_str)
     except json.JSONDecodeError as _:  # noqa: F841
         try:

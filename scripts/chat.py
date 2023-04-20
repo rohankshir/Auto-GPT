@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 from config import Config
 import token_counter
 from llm_utils import create_chat_completion
-from logger import logger
 import logging
 
 cfg = Config()
+
+logger = logging.getLogger(__name__)
 
 
 def create_chat_message(role, content):
@@ -37,7 +38,8 @@ def generate_context(prompt, relevant_memory, full_message_history, model):
     next_message_to_add_index = len(full_message_history) - 1
     insertion_index = len(current_context)
     # Count the currently used tokens
-    current_tokens_used = token_counter.count_message_tokens(current_context, model)
+    current_tokens_used = token_counter.count_message_tokens(
+        current_context, model)
     return next_message_to_add_index, current_tokens_used, insertion_index, current_context
 
 
@@ -118,9 +120,11 @@ def chat_with_ai(
                 # Skip printing the prompt
                 if message["role"] == "system" and message["content"] == prompt:
                     continue
-                logger.debug(f"{message['role'].capitalize()}: {message['content']}")
+                logger.debug(
+                    f"{message['role'].capitalize()}: {message['content']}")
                 logger.debug("")
             logger.debug("----------- END OF CONTEXT ----------------")
+            logger.debug(current_context)
 
             # TODO: use a model defined elsewhere, so that model can contain temperature and other settings we care about
             assistant_reply = create_chat_completion(
