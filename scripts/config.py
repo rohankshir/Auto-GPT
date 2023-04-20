@@ -34,7 +34,11 @@ class Config(metaclass=Singleton):
 
     def __init__(self):
         """Initialize the Config class"""
+<<<<<<< Updated upstream
         self.debug_mode = False
+=======
+        self.debug_mode = True
+>>>>>>> Stashed changes
         self.continuous_mode = False
         self.continuous_limit = 0
         self.speak_mode = False
@@ -47,7 +51,12 @@ class Config(metaclass=Singleton):
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.temperature = float(os.getenv("TEMPERATURE", "1"))
         self.use_azure = os.getenv("USE_AZURE") == 'True'
+<<<<<<< Updated upstream
         self.execute_local_commands = os.getenv('EXECUTE_LOCAL_COMMANDS', 'False') == 'True'
+=======
+        self.execute_local_commands = os.getenv(
+            'EXECUTE_LOCAL_COMMANDS', 'False') == 'True'
+>>>>>>> Stashed changes
 
         if self.use_azure:
             self.load_azure_config()
@@ -76,11 +85,21 @@ class Config(metaclass=Singleton):
 
         # User agent headers to use when browsing web
         # Some websites might just completely deny request with an error code if no user agent was found.
+<<<<<<< Updated upstream
         self.user_agent_header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
         self.redis_host = os.getenv("REDIS_HOST", "localhost")
         self.redis_port = os.getenv("REDIS_PORT", "6379")
         self.redis_password = os.getenv("REDIS_PASSWORD", "")
         self.wipe_redis_on_start = os.getenv("WIPE_REDIS_ON_START", "True") == 'True'
+=======
+        self.user_agent_header = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
+        self.redis_host = os.getenv("REDIS_HOST", "localhost")
+        self.redis_port = os.getenv("REDIS_PORT", "6379")
+        self.redis_password = os.getenv("REDIS_PASSWORD", "")
+        self.wipe_redis_on_start = os.getenv(
+            "WIPE_REDIS_ON_START", "True") == 'True'
+>>>>>>> Stashed changes
         self.memory_index = os.getenv("MEMORY_INDEX", 'auto-gpt')
         # Note that indexes must be created on db 0 in redis, this is not configurable.
 
@@ -88,6 +107,13 @@ class Config(metaclass=Singleton):
         # Initialize the OpenAI API client
         openai.api_key = self.openai_api_key
 
+<<<<<<< Updated upstream
+=======
+        self.task_mode = None
+        
+        self.pytest_executable = os.getenv("PYTEST_EXECUTABLE", "pytest")
+
+>>>>>>> Stashed changes
     def get_azure_deployment_id_for_model(self, model: str) -> str:
         """
         Returns the relevant deployment id for the model specified.
@@ -107,9 +133,16 @@ class Config(metaclass=Singleton):
         else:
             return ""
 
+<<<<<<< Updated upstream
     AZURE_CONFIG_FILE = os.path.join(os.path.dirname(__file__), '..', 'azure.yaml')
 
     def load_azure_config(self, config_file: str=AZURE_CONFIG_FILE) -> None:
+=======
+    AZURE_CONFIG_FILE = os.path.join(
+        os.path.dirname(__file__), '..', 'azure.yaml')
+
+    def load_azure_config(self, config_file: str = AZURE_CONFIG_FILE) -> None:
+>>>>>>> Stashed changes
         """
         Loads the configuration parameters for Azure hosting from the specified file path as a yaml file.
 
@@ -124,10 +157,21 @@ class Config(metaclass=Singleton):
                 config_params = yaml.load(file, Loader=yaml.FullLoader)
         except FileNotFoundError:
             config_params = {}
+<<<<<<< Updated upstream
         self.openai_api_type = os.getenv("OPENAI_API_TYPE", config_params.get("azure_api_type", "azure"))
         self.openai_api_base = os.getenv("OPENAI_AZURE_API_BASE", config_params.get("azure_api_base", ""))
         self.openai_api_version = os.getenv("OPENAI_AZURE_API_VERSION", config_params.get("azure_api_version", ""))
         self.azure_model_to_deployment_id_map = config_params.get("azure_model_map", [])
+=======
+        self.openai_api_type = os.getenv(
+            "OPENAI_API_TYPE", config_params.get("azure_api_type", "azure"))
+        self.openai_api_base = os.getenv(
+            "OPENAI_AZURE_API_BASE", config_params.get("azure_api_base", ""))
+        self.openai_api_version = os.getenv(
+            "OPENAI_AZURE_API_VERSION", config_params.get("azure_api_version", ""))
+        self.azure_model_to_deployment_id_map = config_params.get(
+            "azure_model_map", [])
+>>>>>>> Stashed changes
 
     def set_continuous_mode(self, value: bool):
         """Set the continuous mode value."""
@@ -192,3 +236,10 @@ class Config(metaclass=Singleton):
     def set_debug_mode(self, value: bool):
         """Set the debug mode value."""
         self.debug_mode = value
+<<<<<<< Updated upstream
+=======
+
+    def set_task_mode(self, value: str):
+        """Set the task mode value."""
+        self.task_mode = value
+>>>>>>> Stashed changes

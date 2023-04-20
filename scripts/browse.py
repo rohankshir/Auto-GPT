@@ -26,7 +26,12 @@ def sanitize_url(url):
 
 # Define and check for local file address prefixes
 def check_local_file_access(url):
+<<<<<<< Updated upstream
     local_prefixes = ['file:///', 'file://localhost', 'http://localhost', 'https://localhost']
+=======
+    local_prefixes = ['file:///', 'file://localhost',
+                      'http://localhost', 'https://localhost']
+>>>>>>> Stashed changes
     return any(url.startswith(prefix) for prefix in local_prefixes)
 
 
@@ -42,7 +47,12 @@ def get_response(url, headers=cfg.user_agent_header, timeout=10):
 
         sanitized_url = sanitize_url(url)
 
+<<<<<<< Updated upstream
         response = requests.get(sanitized_url, headers=headers, timeout=timeout)
+=======
+        response = requests.get(
+            sanitized_url, headers=headers, timeout=timeout)
+>>>>>>> Stashed changes
 
         # Check if the response contains an HTTP error
         if response.status_code >= 400:
@@ -142,13 +152,21 @@ def summarize_text(text, question):
         return "Error: No text to summarize"
 
     text_length = len(text)
+<<<<<<< Updated upstream
     print(f"Text length: {text_length} characters")
+=======
+    logger.info(f"Text length: {text_length} characters")
+>>>>>>> Stashed changes
 
     summaries = []
     chunks = list(split_text(text))
 
     for i, chunk in enumerate(chunks):
+<<<<<<< Updated upstream
         print(f"Summarizing chunk {i + 1} / {len(chunks)}")
+=======
+        logger.info(f"Summarizing chunk {i + 1} / {len(chunks)}")
+>>>>>>> Stashed changes
         messages = [create_message(chunk, question)]
 
         summary = create_chat_completion(
@@ -158,7 +176,11 @@ def summarize_text(text, question):
         )
         summaries.append(summary)
 
+<<<<<<< Updated upstream
     print(f"Summarized {len(chunks)} chunks.")
+=======
+    logger.info(f"Summarized {len(chunks)} chunks.")
+>>>>>>> Stashed changes
 
     combined_summary = "\n".join(summaries)
     messages = [create_message(combined_summary, question)]

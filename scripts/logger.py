@@ -72,9 +72,17 @@ class Logger(metaclass=Singleton):
         self.console_handler.setFormatter(console_formatter)
 
         # Info handler in activity.log
+<<<<<<< Updated upstream
         self.file_handler = logging.FileHandler(os.path.join(log_dir, log_file))
         self.file_handler.setLevel(logging.DEBUG)
         info_formatter = AutoGptFormatter('%(asctime)s %(levelname)s %(title)s %(message_no_color)s')
+=======
+        self.file_handler = logging.FileHandler(
+            os.path.join(log_dir, log_file))
+        self.file_handler.setLevel(logging.DEBUG)
+        info_formatter = AutoGptFormatter(
+            '%(asctime)s %(levelname)s %(title)s %(message_no_color)s')
+>>>>>>> Stashed changes
         self.file_handler.setFormatter(info_formatter)
 
         # Error handler error.log
@@ -112,7 +120,12 @@ class Logger(metaclass=Singleton):
         else:
             content = ""
 
+<<<<<<< Updated upstream
         self.typing_logger.log(level, content, extra={'title': title, 'color': title_color})
+=======
+        self.typing_logger.log(level, content, extra={
+                               'title': title, 'color': title_color})
+>>>>>>> Stashed changes
 
     def debug(
             self,
@@ -146,7 +159,12 @@ class Logger(metaclass=Singleton):
         if message:
             if isinstance(message, list):
                 message = " ".join(message)
+<<<<<<< Updated upstream
         self.logger.log(level, message, extra={'title': title, 'color': title_color})
+=======
+        self.logger.log(level, message, extra={
+                        'title': title, 'color': title_color})
+>>>>>>> Stashed changes
 
     def set_level(self, level):
         self.logger.setLevel(level)
@@ -156,7 +174,12 @@ class Logger(metaclass=Singleton):
         if not additionalText:
             additionalText = "Please ensure you've setup and configured everything correctly. Read https://github.com/Torantulino/Auto-GPT#readme to double check. You can also create a github issue or join the discord and ask there!"
 
+<<<<<<< Updated upstream
         self.typewriter_log("DOUBLE CHECK CONFIGURATION", Fore.YELLOW, additionalText)
+=======
+        self.typewriter_log("DOUBLE CHECK CONFIGURATION",
+                            Fore.YELLOW, additionalText)
+>>>>>>> Stashed changes
 
 
 '''
@@ -176,7 +199,12 @@ class TypingConsoleHandler(logging.StreamHandler):
                 print(word, end="", flush=True)
                 if i < len(words) - 1:
                     print(" ", end="", flush=True)
+<<<<<<< Updated upstream
                 typing_speed = random.uniform(min_typing_speed, max_typing_speed)
+=======
+                typing_speed = random.uniform(
+                    min_typing_speed, max_typing_speed)
+>>>>>>> Stashed changes
                 time.sleep(typing_speed)
                 # type faster after each word
                 min_typing_speed = min_typing_speed * 0.95
@@ -200,6 +228,7 @@ class AutoGptFormatter(logging.Formatter):
     Allows to handle custom placeholders 'title_color' and 'message_no_color'.
     To use this formatter, make sure to pass 'color', 'title' as log extras.
     """
+<<<<<<< Updated upstream
     def format(self, record: LogRecord) -> str:
         if (hasattr(record, 'color')):
             record.title_color = getattr(record, 'color') + getattr(record, 'title') + " " + Style.RESET_ALL
@@ -207,6 +236,18 @@ class AutoGptFormatter(logging.Formatter):
             record.title_color = getattr(record, 'title')
         if hasattr(record, 'msg'):
             record.message_no_color = remove_color_codes(getattr(record, 'msg'))
+=======
+
+    def format(self, record: LogRecord) -> str:
+        if (hasattr(record, 'color')):
+            record.title_color = getattr(
+                record, 'color') + getattr(record, 'title') + " " + Style.RESET_ALL
+        else:
+            record.title_color = getattr(record, 'title')
+        if hasattr(record, 'msg'):
+            record.message_no_color = remove_color_codes(
+                getattr(record, 'msg'))
+>>>>>>> Stashed changes
         else:
             record.message_no_color = ''
         return super().format(record)

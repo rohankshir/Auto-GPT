@@ -81,7 +81,12 @@ def search_files(directory):
         for file in files:
             if file.startswith('.'):
                 continue
+<<<<<<< Updated upstream
             relative_path = os.path.relpath(os.path.join(root, file), working_directory)
+=======
+            relative_path = os.path.relpath(
+                os.path.join(root, file), working_directory)
+>>>>>>> Stashed changes
             found_files.append(relative_path)
 
     return found_files

@@ -55,9 +55,12 @@ def get_command(response):
         return "Error:", str(e)
 
 
-def execute_command(command_name, arguments):
+def execute_command(command_name, arguments, ai_cfg):
     """Execute the command and return the result"""
     memory = get_memory(cfg)
+    logger.info(ai_cfg)
+    if arguments.get('file', '').endswith('.py'):
+        ai_cfg.last_code_file = arguments['file']
 
     try:
         if command_name == "google":
@@ -101,13 +104,41 @@ def execute_command(command_name, arguments):
         # non-file is given, return instructions "Input should be a python
         # filepath, write your code to file and try again"
         elif command_name == "evaluate_code":
-            return ai.evaluate_code(arguments["code"])
+            file_contents = read_file(arguments["file"])
+            return ai.evaluate_code_with_goal(file_contents, arguments['focus'], ai_cfg=ai_cfg)
         elif command_name == "improve_code":
-            return ai.improve_code(arguments["suggestions"], arguments["code"])
+            code = arguments['code']
+            if arguments['code'].endswith(".py"):
+                code = read_file(arguments["code"])
+                ai_cfg.last_code_file = arguments['code']
+            improved_code = ai.improve_code_alternative(
+                arguments["suggestions"], code, ai_cfg=ai_cfg)
+            write_to_file(ai_cfg.last_code_file, improved_code)
+            return f"The following improved code was written to {ai_cfg.last_code_file}:\n{improved_code}"
         elif command_name == "write_tests":
-            return ai.write_tests(arguments["code"], arguments.get("focus"))
+            code = arguments["code"]
+            if code.endswith(".py"):
+                file_contents = read_file(arguments["code"])
+                ai_cfg.last_code_file = arguments['code']
+            else:
+                file_contents = code
+            tests = ai.write_tests_alternative(file_contents, arguments.get("focus"), ai_cfg=ai_cfg)
+            append_to_file(arguments["file"], tests)
+            return "Wrote following tests to {}: {}".format(arguments["file"], tests)
+        elif command_name ==  "overwrite_tests":
+            code = arguments["code"]
+            if code.endswith(".py"):
+                file_contents = read_file(arguments["code"])
+                ai_cfg.last_code_file = arguments['code']
+            else:
+                file_contents = code
+            tests = ai.write_tests_alternative(file_contents, arguments.get("focus"), ai_cfg=ai_cfg)
+            write_to_file(arguments["file"], tests)
+            return "Wrote following tests to {}:{}".format(arguments["file"], tests)
         elif command_name == "execute_python_file":  # Add this command
             return execute_python_file(arguments["file"])
+        elif command_name == "run_python_tests":
+            return run_python_tests(arguments["file"])
         elif command_name == "execute_shell":
             if cfg.execute_local_commands:
                 return execute_shell(arguments["command_line"])
@@ -156,7 +187,8 @@ def google_official_search(query, num_results=8):
         service = build("customsearch", "v1", developerKey=api_key)
 
         # Send the search query and retrieve the results
-        result = service.cse().list(q=query, cx=custom_search_engine_id, num=num_results).execute()
+        result = service.cse().list(q=query, cx=custom_search_engine_id,
+                                    num=num_results).execute()
 
         # Extract the search result items from the response
         search_results = result.get("items", [])

@@ -66,13 +66,22 @@ def chat_with_ai(
             Returns:
             str: The AI's response.
             """
+<<<<<<< Updated upstream
             model = cfg.fast_llm_model # TODO: Change model from hardcode to argument
+=======
+            model = cfg.fast_llm_model  # TODO: Change model from hardcode to argument
+>>>>>>> Stashed changes
             # Reserve 1000 tokens for the response
 
             logger.debug(f"Token limit: {token_limit}")
             send_token_limit = token_limit - 1000
 
+<<<<<<< Updated upstream
             relevant_memory = '' if len(full_message_history) ==0 else  permanent_memory.get_relevant(str(full_message_history[-9:]), 10)
+=======
+            relevant_memory = '' if len(full_message_history) == 0 else permanent_memory.get_relevant(
+                str(full_message_history[-9:]), 10)
+>>>>>>> Stashed changes
 
             logger.debug(f'Memory Stats: {permanent_memory.get_stats()}')
 
@@ -85,18 +94,33 @@ def chat_with_ai(
                 next_message_to_add_index, current_tokens_used, insertion_index, current_context = generate_context(
                     prompt, relevant_memory, full_message_history, model)
 
+<<<<<<< Updated upstream
             current_tokens_used += token_counter.count_message_tokens([create_chat_message("user", user_input)], model) # Account for user input (appended later)
+=======
+            current_tokens_used += token_counter.count_message_tokens([create_chat_message(
+                "user", user_input)], model)  # Account for user input (appended later)
+>>>>>>> Stashed changes
 
             while next_message_to_add_index >= 0:
                 # print (f"CURRENT TOKENS USED: {current_tokens_used}")
                 message_to_add = full_message_history[next_message_to_add_index]
 
+<<<<<<< Updated upstream
                 tokens_to_add = token_counter.count_message_tokens([message_to_add], model)
+=======
+                tokens_to_add = token_counter.count_message_tokens(
+                    [message_to_add], model)
+>>>>>>> Stashed changes
                 if current_tokens_used + tokens_to_add > send_token_limit:
                     break
 
                 # Add the most recent message to the start of the current context, after the two system prompts.
+<<<<<<< Updated upstream
                 current_context.insert(insertion_index, full_message_history[next_message_to_add_index])
+=======
+                current_context.insert(
+                    insertion_index, full_message_history[next_message_to_add_index])
+>>>>>>> Stashed changes
 
                 # Count the currently used tokens
                 current_tokens_used += tokens_to_add

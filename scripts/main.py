@@ -99,8 +99,9 @@ def print_assistant_thoughts(assistant_reply):
             try:
                 assistant_reply_json = json.loads(assistant_reply_json)
             except json.JSONDecodeError as e:
-                logger.error("Error: Invalid JSON\n", assistant_reply)
-                assistant_reply_json = attempt_to_fix_json_by_finding_outermost_brackets(assistant_reply_json)
+                logger.error("Error: Invalid JSON\n" + assistant_reply)
+                assistant_reply_json = attempt_to_fix_json_by_finding_outermost_brackets(
+                    assistant_reply_json)
 
         assistant_thoughts_reasoning = None
         assistant_thoughts_plan = None
@@ -145,7 +146,8 @@ def print_assistant_thoughts(assistant_reply):
     except json.decoder.JSONDecodeError as e:
         logger.error("Error: Invalid JSON\n", assistant_reply)
         if cfg.speak_mode:
-            speak.say_text("I have received an invalid JSON response from the OpenAI API. I cannot ignore this response.")
+            speak.say_text(
+                "I have received an invalid JSON response from the OpenAI API. I cannot ignore this response.")
 
     # All other errors, return "Error: + error message"
     except Exception as e:
@@ -155,30 +157,31 @@ def print_assistant_thoughts(assistant_reply):
 
 def construct_prompt():
     """Construct the prompt for the AI to respond to"""
-    config = AIConfig.load()
-    if config.ai_name:
-        logger.typewriter_log(
+    global ai_cfg
+    ai_cfg = AIConfig.load()
+    if ai_cfg.ai_name:
+        typewriter_logger.typewriter_log(
             f"Welcome back! ",
             Fore.GREEN,
-            f"Would you like me to return to being {config.ai_name}?",
+            f"Would you like me to return to being {ai_cfg.ai_name}?",
             speak_text=True)
         should_continue = utils.clean_input(f"""Continue with the last settings?
-Name:  {config.ai_name}
-Role:  {config.ai_role}
-Goals: {config.ai_goals}
+Name:  {ai_cfg.ai_name}
+Role:  {ai_cfg.ai_role}
+Goals: {ai_cfg.ai_goals}
 Continue (y/n): """)
         if should_continue.lower() == "n":
-            config = AIConfig()
+            ai_cfg = AIConfig()
 
-    if not config.ai_name:
-        config = prompt_user()
-        config.save()
+    if not ai_cfg.ai_name:
+        ai_cfg = prompt_user()
+        ai_cfg.save()
 
     # Get rid of this global:
     global ai_name
-    ai_name = config.ai_name
+    ai_name = ai_cfg.ai_name
 
-    full_prompt = config.construct_full_prompt()
+    full_prompt = ai_cfg.construct_full_prompt(cfg.task_mode)
     return full_prompt
 
 

@@ -63,9 +63,9 @@ def fix_and_parse_json(
     except (json.JSONDecodeError, ValueError) as e:  # noqa: F841
         if try_to_fix_with_gpt:
             logger.warn("Warning: Failed to parse AI output, attempting to fix."
-                  "\n If you see this warning frequently, it's likely that"
-                  " your prompt is confusing the AI. Try changing it up"
-                  " slightly.")
+                        "\n If you see this warning frequently, it's likely that"
+                        " your prompt is confusing the AI. Try changing it up"
+                        " slightly.")
             # Now try to fix this up using the ai_functions
             ai_fixed_json = fix_json(json_str, JSON_SCHEMA)
 

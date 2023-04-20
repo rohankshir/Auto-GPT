@@ -29,6 +29,7 @@ class PromptGenerator:
                 }
             }
         }
+        self.mode = None
 
     def add_constraint(self, constraint):
         """
@@ -84,6 +85,12 @@ class PromptGenerator:
             resource (str): The resource to be added.
         """
         self.resources.append(resource)
+        
+    def add_mode(self, mode):
+        """
+        Add the current mode of the agent
+        """
+        self.mode = mode
 
     def add_performance_evaluation(self, evaluation):
         """
@@ -120,7 +127,13 @@ class PromptGenerator:
         formatted_response_format = json.dumps(self.response_format, indent=4)
         prompt_string = (
             f"Constraints:\n{self._generate_numbered_list(self.constraints)}\n\n"
+<<<<<<< Updated upstream:scripts/promptgenerator.py
             f"Commands:\n{self._generate_numbered_list(self.commands, item_type='command')}\n\n"
+=======
+            f"Agent Mode:\n{self.mode}\n\n"
+            "Commands:\n"
+            f"{self._generate_numbered_list(self.commands, item_type='command')}\n\n"
+>>>>>>> Stashed changes:autogpt/prompts/generator.py
             f"Resources:\n{self._generate_numbered_list(self.resources)}\n\n"
             f"Performance Evaluation:\n{self._generate_numbered_list(self.performance_evaluation)}\n\n"
             f"You should only respond in JSON format as described below \nResponse Format: \n{formatted_response_format} \nEnsure the response can be parsed by Python json.loads"
